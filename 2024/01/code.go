@@ -19,10 +19,6 @@ func main() {
 // 4. with: true (part2), and user input
 // the return value of each run is printed to stdout
 func run(part2 bool, input string) any {
-	if part2 {
-		return "not implemented"
-	}
-
 	sum := uint64(0)
 	var left []uint64
 	var right []uint64
@@ -31,6 +27,19 @@ func run(part2 bool, input string) any {
 		left = append(left, parseUint(values[0]))
 		right = append(right, parseUint(values[1]))
 	}
+
+	if part2 {
+		m := make(map[uint64]uint64)
+		for _, v := range right {
+			m[v]++
+		}
+		for _, v := range left {
+			sum += v * m[v]
+		}
+
+		return sum
+	}
+
 	sort.Slice(left, func(i, j int) bool { return left[i] < left[j] })
 	sort.Slice(right, func(i, j int) bool { return right[i] < right[j] })
 	var length = len(left)
