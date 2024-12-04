@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"aoc-in-go/2024/utils"
 	"github.com/jpillora/puzzler/harness/aoc"
 	"sort"
-	"strconv"
 	"strings"
 )
 
@@ -24,8 +23,8 @@ func run(part2 bool, input string) any {
 	var right []uint64
 	for _, line := range strings.Split(strings.TrimSpace(input), "\n") {
 		values := strings.Fields(line)
-		left = append(left, parseUint(values[0]))
-		right = append(right, parseUint(values[1]))
+		left = append(left, utils.ParseUint64(values[0]))
+		right = append(right, utils.ParseUint64(values[1]))
 	}
 
 	if part2 {
@@ -48,15 +47,6 @@ func run(part2 bool, input string) any {
 	}
 
 	return sum
-}
-
-func parseUint(s string) uint64 {
-	u64, err := strconv.ParseUint(s, 10, 64)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return u64
 }
 
 func diff(a, b uint64) uint64 {
