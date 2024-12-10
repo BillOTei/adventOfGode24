@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/jpillora/puzzler/harness/aoc"
+	"regexp"
 	"strings"
 )
 
@@ -11,6 +12,7 @@ func main() {
 
 func run(part2 bool, input string) any {
 	sum := 0
+	lines := strings.Split(strings.TrimSpace(input), "\n")
 	//xmas := regexp.MustCompile("XMAS")
 	//samx := regexp.MustCompile("SAMX")
 	//for _, line := range strings.Split(strings.TrimSpace(input), "\n") {
@@ -20,7 +22,106 @@ func run(part2 bool, input string) any {
 	//	sum += len(allXmas) + len(allSamx)
 	//}
 
-	lines := strings.Split(strings.TrimSpace(input), "\n")
+	if part2 {
+		//mask1 := make([][]string, 3)
+		//mask2 := make([][]string, 3)
+		//mask3 := make([][]string, 3)
+		//mask4 := make([][]string, 3)
+		//for y := 0; y < 3; y++ {
+		//	mask1[y] = make([]string, 3)
+		//	mask2[y] = make([]string, 3)
+		//	mask3[y] = make([]string, 3)
+		//	mask4[y] = make([]string, 3)
+		//
+		//	for x := 0; x < 3; x++ {
+		//		switch x {
+		//		case 0:
+		//			switch y {
+		//			case 0:
+		//				mask1[y][x] = "M"
+		//				mask2[y][x] = "S"
+		//				mask3[y][x] = "M"
+		//				mask4[y][x] = "S"
+		//			case 1:
+		//				mask1[y][x] = "."
+		//				mask2[y][x] = "."
+		//				mask3[y][x] = "."
+		//				mask4[y][x] = "."
+		//			case 2:
+		//				mask1[y][x] = "S"
+		//				mask2[y][x] = "M"
+		//				mask3[y][x] = "M"
+		//				mask4[y][x] = "A"
+		//			}
+		//		case 1:
+		//			switch y {
+		//			case 0:
+		//				mask1[y][x] = "."
+		//				mask2[y][x] = "."
+		//				mask3[y][x] = "."
+		//				mask4[y][x] = "."
+		//			case 1:
+		//				mask1[y][x] = "A"
+		//				mask2[y][x] = "A"
+		//				mask3[y][x] = "A"
+		//				mask4[y][x] = "A"
+		//			case 2:
+		//				mask1[y][x] = "."
+		//				mask2[y][x] = "."
+		//				mask3[y][x] = "."
+		//				mask4[y][x] = "."
+		//			}
+		//		case 2:
+		//			switch y {
+		//			case 0:
+		//				mask1[y][x] = "M"
+		//				mask2[y][x] = "S"
+		//				mask3[y][x] = "S"
+		//				mask4[y][x] = "M"
+		//			case 1:
+		//				mask1[y][x] = "."
+		//				mask2[y][x] = "."
+		//				mask3[y][x] = "."
+		//				mask4[y][x] = "."
+		//			case 2:
+		//				mask1[y][x] = "S"
+		//				mask2[y][x] = "M"
+		//				mask3[y][x] = "S"
+		//				mask4[y][x] = "M"
+		//			}
+		//		}
+		//	}
+		//}
+
+		length := len(lines)
+		for y, line := range lines {
+			runes := []rune(line)
+			for x, c := range runes {
+				if string(c) == "A" && x != -1 && x > 0 && x < length-1 && y > 0 && y < length-1 {
+					up := lines[y-1][x-1 : x+2]
+					down := lines[y+1][x-1 : x+2]
+
+					//fmt.Println(lines[y-1], up, lines[y+1], down)
+
+					m1Up, _ := regexp.MatchString("M.M", up)
+					m1Down, _ := regexp.MatchString("S.S", down)
+					m2Up, _ := regexp.MatchString("M.S", up)
+					m2Down, _ := regexp.MatchString("M.S", down)
+					m3Up, _ := regexp.MatchString("S.S", up)
+					m3Down, _ := regexp.MatchString("M.M", down)
+					m4Up, _ := regexp.MatchString("S.M", up)
+					m4Down, _ := regexp.MatchString("S.M", down)
+					if (m1Up && m1Down) || (m2Up && m2Down) || (m3Up && m3Down) || (m4Up && m4Down) {
+						sum += 1
+					}
+				}
+			}
+
+		}
+
+		return sum
+	}
+
 	for i := 0; i < len(lines); i++ {
 		for j := 0; j < len(lines[i]); j++ {
 			neighbours := newNeighbours(j, i)
@@ -38,12 +139,9 @@ func run(part2 bool, input string) any {
 		}
 	}
 
-	if part2 {
-		return runPart2(input)
-	}
-
 	return sum
 }
+
 func checkNeighbours(n neighbour, word string, lines []string) bool {
 	if len(word) == 0 {
 		return true
@@ -127,36 +225,3 @@ const (
 	W
 	NW
 )
-
-func checkIfElementsPart2(inputOne string, inputTwo string) bool {
-	//Check if the inputs provided creates a X-MAS one way or the other
-	if (inputOne == "MAS" || inputOne == "SAM") && (inputTwo == "MAS" || inputTwo == "SAM") {
-		return true
-	}
-	return false
-}
-func runPart2(input string) int {
-	//Get  rows of data
-	rows := strings.Split(input, "\r\n")
-	var count = 0
-	//Loop Through Rows
-	for i := 0; i <= (len(rows) - 1); i++ {
-		if (len(rows) - 1) <= i {
-			break
-		}
-		//Skip first and last Row as cannot make an X-MAS with no rows above or below
-		if i != 0 && i <= (len(rows)-1) {
-			//Loop through value of Rows
-			for z := 0; z < len(rows[i]); z++ {
-				//if Value is "A" check the correct values the row above and below and Check Elements to see if they make and X-MAS
-				if string(rows[i][z]) == "A" && len(rows[i][:z]) >= 1 && len(rows[i][z:]) > 1 {
-					if checkIfElementsPart2(string(string(rows[i-1][z-1])+string(rows[i][z])+string(rows[i+1][z+1])), string(string(rows[i+1][z-1])+string(rows[i][z])+string(rows[i-1][z+1]))) {
-						count++
-					}
-				}
-			}
-		}
-	}
-
-	return count
-}
