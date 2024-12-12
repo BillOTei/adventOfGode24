@@ -4,6 +4,7 @@ import (
 	"aoc-in-go/2024/utils"
 	"github.com/jpillora/puzzler/harness/aoc"
 	"slices"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -26,6 +27,53 @@ func run(part2 bool, input string) any {
 		mPred[k] = append(mPred[k], v)
 		mSucc[v] = append(mSucc[v], k)
 	}
+
+	if part2 {
+		for _, update := range rawPages {
+			pages := strings.Split(update, ",")
+			valid := true
+			var buff []uint64
+		pageLoop2:
+			for _, p := range pages {
+				page := utils.ParseUint64(p)
+				predecessors := mPred[page]
+				successors := mSucc[page]
+				if len(buff) == 0 {
+					buff = append(buff, page)
+				} else {
+					for _, succ := range successors {
+						if slices.Contains(pages, strconv.FormatUint(succ, 10)) && slices.Contains(buff, succ) {
+							valid = false
+							break pageLoop2
+						}
+					}
+					for _, pred := range predecessors {
+						if slices.Contains(pages, strconv.FormatUint(pred, 10)) && !slices.Contains(buff, pred) {
+							valid = false
+							break pageLoop2
+						}
+					}
+					buff = append(buff, page)
+				}
+			}
+			if !valid {
+				l := len(pages)
+				sort.Slice(pages, func(i, j int) bool {
+					page := utils.ParseUint64(pages[i])
+					predecessors := mPred[page]
+					if slices.Contains(predecessors, utils.ParseUint64(pages[j])) {
+						return false
+					}
+
+					return true
+				})
+				sum += utils.ParseUint64(pages[l/2])
+			}
+		}
+
+		return sum
+	}
+
 	for _, update := range rawPages {
 		pages := strings.Split(update, ",")
 		valid := true
@@ -57,10 +105,6 @@ func run(part2 bool, input string) any {
 			l := len(pages)
 			sum += utils.ParseUint64(pages[l/2])
 		}
-	}
-
-	if part2 {
-		return "not implemented"
 	}
 
 	return sum
