@@ -12,16 +12,6 @@ func main() {
 func run(part2 bool, input string) any {
 	lines := strings.Split(strings.TrimSpace(input), "\n")
 	limit := len(lines)
-	//
-	//for y, line := range lines {
-	//	chars := strings.Split(line, "")
-	//	for x, c := range chars {
-	//		if c == "A" {
-	//			fmt.Println(x, y)
-	//		}
-	//	}
-	//}
-
 	visited := move(
 		&lines,
 		limit,
