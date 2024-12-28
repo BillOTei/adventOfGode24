@@ -20,3 +20,10 @@ func RemoveIndex(s []uint64, index int) []uint64 {
 
 	return append(ret, s[index+1:]...)
 }
+
+func ReplaceAtIndex(in string, r rune, i int) string {
+	out := []rune(in)
+	out[i] = r
+
+	return string(out)
+}
