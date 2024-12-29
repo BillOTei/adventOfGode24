@@ -200,7 +200,7 @@ func move2(m *[]string, limit int, currP point, visited map[point]bool) bool {
 				m,
 				limit,
 				point{
-					x:         currP.x + 1,
+					x:         currP.x,
 					y:         currP.y,
 					direction: ">",
 				},
@@ -231,7 +231,7 @@ func move2(m *[]string, limit int, currP point, visited map[point]bool) bool {
 				limit,
 				point{
 					x:         currP.x,
-					y:         currP.y + 1,
+					y:         currP.y,
 					direction: "v",
 				},
 				visited,
@@ -259,7 +259,7 @@ func move2(m *[]string, limit int, currP point, visited map[point]bool) bool {
 				m,
 				limit,
 				point{
-					x:         currP.x - 1,
+					x:         currP.x,
 					y:         currP.y,
 					direction: "<",
 				},
@@ -289,7 +289,7 @@ func move2(m *[]string, limit int, currP point, visited map[point]bool) bool {
 				limit,
 				point{
 					x:         currP.x,
-					y:         currP.y - 1,
+					y:         currP.y,
 					direction: "^",
 				},
 				visited,
