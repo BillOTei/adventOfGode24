@@ -18,6 +18,10 @@ func run(part2 bool, input string) any {
 		y:         36,
 		direction: "^",
 	}
+	startP := p{
+		x: start.x,
+		y: start.y,
+	}
 	visited := move(
 		&lines,
 		limit,
@@ -32,7 +36,7 @@ func run(part2 bool, input string) any {
 			copy(newLines, lines)
 			l := newLines[toCheck.y]
 			newLines[toCheck.y] = utils.ReplaceAtIndex(l, '#', toCheck.x)
-			if move2(&newLines, limit, start, make(map[point]bool)) {
+			if move2(&newLines, limit, start, make(map[point]bool)) && toCheck != startP {
 				blocks[toCheck] = true
 			}
 		}
